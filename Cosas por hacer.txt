@@ -1,0 +1,32 @@
+Prototipo inicial
+
+Objetos Necesarios
+
+-Mapa
+
+-Enemigo
+   - Spawn de Inicio
+   - Punto Final del Camino
+   - Velocidad 
+   - Vida
+
+-Torre
+   - Rango de Tiro
+   - Velocidad de Tiro 
+   - Tiros (spawn de proyectiles)
+   - Daño
+   - Tipo de daño
+
+-Menu para poner torres
+   - Arrastrar para colocar
+   - Cambio de Color para verificar si se puede poner la torre en ese lugar
+
+-Vida
+   - Barra de Vida
+   - Game Over cuando se acaba la vida
+
+-Reset 
+   - Boton para reiniciar el juego
+
+
+
