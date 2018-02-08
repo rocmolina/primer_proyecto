@@ -5,58 +5,75 @@ using UnityEditor;
 
 public class Enemigo : MonoBehaviour {
 	 
-	public GameObject punto1, punto2, punto3;
-	public Vector2 positionPunto1, positionPunto2, positionPunto3;
+	//variable que controla la velocidad
 	public float velocidad = 1f;
 
-	public bool punto1listo = false, punto2listo = false;
+	//variable que controla el objetivo actual donde debe ir el enemigo
+	private Transform objetivo;
+	//variable que hace referncia a la sussecion de puntos en el script CntrlPuntosDeCamino 
+	private int PuntoIndex = 0;
+	//Variable que obtiene la direccion
+	public Vector3 direccion;
 	// Use this for initialization
 	void Start () {
 
-		punto1 = GameObject.Find ("Punto1");
-		punto2 = GameObject.Find ("Punto2");
-		punto3 = GameObject.Find ("Punto3");
-
-		positionPunto1 = GameObject.Find("Punto1").transform.position;
-		positionPunto2 = GameObject.Find("Punto2").transform.position;
-		positionPunto3 = GameObject.Find("Punto3").transform.position;
+		//Se elige el primer punto del conjunto
+		objetivo = CntrlPuntosDeCamino.puntos [0];
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		if (punto1listo == false) {
-			
-			if (transform.position.x != positionPunto1.x && transform.position.y != positionPunto1.y) {
-				transform.position = Vector3.MoveTowards (transform.position, positionPunto1, velocidad);
-			} 
+		//se obtiene la direccion en la que debe ir el enemigo
+	    direccion = objetivo.position - transform.position;
+		//se mueve al enemigo
+		transform.Translate (direccion.normalized * velocidad * Time.deltaTime, Space.World);
 
-			else {
-				
-				punto1listo = true;
-			}
+		//verifica si el enemigo llego al objetivo actual
+		if (Vector3.Distance (transform.position, objetivo.position) < 0.025f) {
 
+			transform.position = objetivo.position;
+			ActivarSiguienteObjetivo ();
 		}
+	
+		VerificarDireccion ();
+	}
 
+	//Aumenta el numero del Index para pasar al siguiente punto del conjunto
+	void ActivarSiguienteObjetivo()
+	{
+		PuntoIndex++;
+		//Verifica si el enemigo ya llego al final
+		if (PuntoIndex >= CntrlPuntosDeCamino.puntos.Length) {
 
-		else if (punto2listo == false){
+			TrayectoCompletado ();
+			return;
+		} 
+
+		else {
 			
-			if (transform.position.x != positionPunto2.x && transform.position.y != positionPunto2.y) {
-				
-				transform.position = Vector3.MoveTowards (transform.position, positionPunto2, velocidad);
-
-			} 
-
-			else {
-
-				punto2listo = true;
-			}
+			objetivo = CntrlPuntosDeCamino.puntos [PuntoIndex];
 		}
+	}
 
-		else
-		{
-			transform.position = Vector3.MoveTowards (transform.position, positionPunto3, velocidad);
+	//Se llama cuando el enemigo llega al final
+	void TrayectoCompletado()
+	{
+		//Destruye al enemigo que ha llegado a su destino final lol
+		Destroy (gameObject);
+	}
+
+	//trabajando actualmente
+	void VerificarDireccion()
+	{
+		Quaternion rotacion;
+
+		if (direccion.x >= 1) {
+
+			rotacion = new Quaternion(transform.rotation.x,transform.rotation.y,transform.rotation.z + 90, transform.rotation.w);
+			transform.rotation = Quaternion.Lerp (transform.rotation, rotacion, velocidad * Time.deltaTime);
 		}
 
 	}
+
 }
