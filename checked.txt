@@ -1,0 +1,2 @@
+vamos a seguir exactamente como el mae del ejemplo entonces? ya lo probe, como podemos probar la cara del jugador? ponele que la cara es la punta del triangulo, al doblar, sigue asi, no gira la cabeza.
+Cuando se ve eso? me da ansiedad verlo asi xD
