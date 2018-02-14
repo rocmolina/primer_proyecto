@@ -6,14 +6,16 @@ using UnityEditor;
 public class Enemigo : MonoBehaviour {
 	 
 	//variable que controla la velocidad
+	[Header("Atributos")]
 	public float velocidad = 1f;
+	public float velocidadGiro = 1f;
 
 	//variable que controla el objetivo actual donde debe ir el enemigo
 	private Transform objetivo;
 	//variable que hace referncia a la sussecion de puntos en el script CntrlPuntosDeCamino 
 	private int PuntoIndex = 0;
 	//Variable que obtiene la direccion
-	public Vector3 direccion;
+	private Vector3 direccion;
 	// Use this for initialization
 	void Start () {
 
@@ -27,6 +29,7 @@ public class Enemigo : MonoBehaviour {
 		//se obtiene la direccion en la que debe ir el enemigo
 	    direccion = objetivo.position - transform.position;
 		//se mueve al enemigo
+		VerificarDireccion ();
 		transform.Translate (direccion.normalized * velocidad * Time.deltaTime, Space.World);
 
 		//verifica si el enemigo llego al objetivo actual
@@ -35,8 +38,6 @@ public class Enemigo : MonoBehaviour {
 			transform.position = objetivo.position;
 			ActivarSiguienteObjetivo ();
 		}
-	
-		VerificarDireccion ();
 	}
 
 	//Aumenta el numero del Index para pasar al siguiente punto del conjunto
@@ -66,14 +67,10 @@ public class Enemigo : MonoBehaviour {
 	//trabajando actualmente
 	void VerificarDireccion()
 	{
-		Quaternion rotacion;
-
-		if (direccion.x >= 1) {
-
-			rotacion = new Quaternion(transform.rotation.x,transform.rotation.y,transform.rotation.z + 90, transform.rotation.w);
-			transform.rotation = Quaternion.Lerp (transform.rotation, rotacion, velocidad * Time.deltaTime);
-		}
-
+		Vector3 nuevaRotacion;
+		Quaternion dirRotacion = Quaternion.LookRotation (direccion);
+		nuevaRotacion = dirRotacion.eulerAngles;
+		transform.rotation = Quaternion.Euler(0f,0f, nuevaRotacion.z);
 	}
 
 }
